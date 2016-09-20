@@ -1,0 +1,47 @@
+{
+  "name": "eslint-history",
+  "version": "0.0.1",
+  "description": "Historical ESLint info, referring to revisions when errors occured and more.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BobChao87/eslint-history.git"
+  },
+  "keywords": [
+    "svn",
+    "eslint"
+  ],
+  "author": "BobChao87",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BobChao87/eslint-history/issues"
+  },
+  "homepage": "https://github.com/BobChao87/eslint-history#readme",
+  "dependencies": {
+    "@angular/common": "^2.0.0",
+    "@angular/compiler": "^2.0.0",
+    "@angular/core": "^2.0.0",
+    "@angular/forms": "^2.0.0",
+    "@angular/http": "^2.0.0",
+    "@angular/platform-browser": "^2.0.0",
+    "@angular/platform-browser-dynamic": "^2.0.0",
+    "@angular/router": "^3.0.0",
+    "@angular/upgrade": "^2.0.0",
+    "angular2-in-memory-web-api": "0.0.20",
+    "bootstrap": "^3.3.7",
+    "core-js": "^2.4.1",
+    "reflect-metadata": "^0.1.8",
+    "rxjs": "^5.0.0-beta.12",
+    "systemjs": "^0.19.38",
+    "zone.js": "^0.6.23"
+  },
+  "devDependencies": {
+    "concurrently": "^2.2.0",
+    "eslint": "^3.5.0",
+    "eslint-config-google": "^0.6.0",
+    "lite-server": "^2.2.2"
+  }
+}
