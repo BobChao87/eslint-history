@@ -21,7 +21,8 @@
       console.log(err);
       return [];
     }
-    return fetchedFiles.forEach(checkIfFile);
+    fetchedFiles.forEach(checkIfFile);
+    return fetchedFiles;
   }
 
   /**
@@ -37,14 +38,13 @@
    * @param {List.<string>} fetchedFiles The original output from svn update.
    */
   function checkIfFile(fetchedFile, index, fetchedFiles) {
-    var svnPrefixLength = 37;
+    var svnPrefixLength = 5;
     var fileName = fetchedFile.substring(svnPrefixLength);
     try {
       fs.accessSync(fileName, fs.R_OK);
       fetchedFiles[index] = fileName;
     } catch (err) {
-      console.log(err);
-      fetchedFile[index] = '';
+      fetchedFiles[index] = '';
     }
   }
 
