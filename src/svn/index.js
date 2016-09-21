@@ -1,5 +1,6 @@
 (function() {
-  let execSync = require('child_process').execSync;
+  const execSync = require('child_process').execSync;
+  const fs = require('fs');
 
   /**
    * @function update
@@ -13,11 +14,37 @@
    * @return {List.<string>} List of changed files (WIP)
    */
   function update(revision = 'HEAD') {
+    var fetchedFiles;
     try {
-      return execSync(`svn up -r${revision}`).toString().split('\n');
+      fetchedFiles = execSync(`svn up -r${revision}`).toString().split('\n');
     } catch (err) {
       console.log(err);
       return [];
+    }
+    return fetchedFiles.forEach(checkIfFile);
+  }
+
+  /**
+   * @function checkIfFile
+   *
+   * @description
+   *
+   * Function to help trim out file names from from the update.
+   * Checks for read access in addition to make sure we can use it.
+   *
+   * @param {string} fetchedFile A single line of output from the svn update command.
+   * @param {number} index The index of the string in the output.
+   * @param {List.<string>} fetchedFiles The original output from svn update.
+   */
+  function checkIfFile(fetchedFile, index, fetchedFiles) {
+    var svnPrefixLength = 37;
+    var fileName = fetchedFile.substring(svnPrefixLength);
+    try {
+      fs.accessSync(fileName, fs.R_OK);
+      fetchedFiles[index] = fileName;
+    } catch (err) {
+      console.log(err);
+      fetchedFile[index] = '';
     }
   }
 
@@ -46,6 +73,8 @@
     update: update,
     log: log
   };
+
+  console.log(svn.update());
 
   module.exports = svn;
 })();
