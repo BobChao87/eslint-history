@@ -14,14 +14,31 @@
    */
   function update(revision = 'HEAD') {
     try {
-      return execSync(`svn up -r${revision}`).toString();
+      return execSync(`svn up -r${revision}`).toString().split('\n');
     } catch (err) {
-      return 'err';
+      console.log(err);
+      return [];
     }
   }
 
+  /**
+   * @function log
+   *
+   * @description
+   *
+   * Used to pull information such as the log comment and the author.
+   *
+   * @param {number|string} [start=1] The first record to fetch a log for.
+   * @param {number|string} [stop='Head'] The last record to fetch a log for.
+   * @return {Object.<string>} Object indexed by the revision containing author and comment. (WIP)
+   */
   function log(start = 1, stop = 'HEAD') {
-    return execSync(`svn up -r${start}:${stop}`).toString();
+    try {
+      return execSync(`svn up -r${start}:${stop}`).toString();
+    } catch (err) {
+      console.log(err);
+      return {};
+    }
   }
 
   var svn = {
@@ -29,8 +46,6 @@
     update: update,
     log: log
   };
-
-  console.log(svn.update());
 
   module.exports = svn;
 })();
