@@ -22,7 +22,7 @@
       return [];
     }
     fetchedFiles.forEach(checkIfFile);
-    return fetchedFiles;
+    return fetchedFiles.filter(isFile);
   }
 
   /**
@@ -46,6 +46,21 @@
     } catch (err) {
       fetchedFiles[index] = '';
     }
+  }
+
+  /**
+   * @function isFile
+   *
+   * @description
+   *
+   * Takes the output from `checkIfFile` and compares it to see if
+   * a file was found or if an empty string was returned.
+   *
+   * @param {string} fetchedFile A string returned by `checkIfFile`.
+   * @return {boolean} True if not an empty string.
+   */
+  function isFile(fetchedFile) {
+    return Boolean(fetchedFile);
   }
 
   /**
@@ -73,8 +88,6 @@
     update: update,
     log: log
   };
-
-  console.log(svn.update());
 
   module.exports = svn;
 })();
