@@ -75,16 +75,17 @@
    * @return {Object.<string>} Object indexed by the revision containing author and comment. (WIP)
    */
   function log(start = 1, stop = 'HEAD') {
+    var logsRaw = [];
     var logs = [];
     try {
-      logs = execSync(`svn log -r${start}:${stop}`).toString().split('\n');
+      logsRaw = execSync(`svn log -r${start}:${stop}`).toString().split('\n');
     } catch (err) {
-      console.log(
-        `Unable to fetch logs for revision ${start} to revision ${stop}`
-      );
+      console.log(`Unable to fetch logs for revisions ${start} to ${stop}.`);
       return {};
     }
-    logs.forEach(findLogStart);
+    for (let index = 0, len = logsRaw.length; index < len; index++) {
+      index = findLogStart(index, logsRaw, logs);
+    }
     return logs;
   }
 
@@ -97,27 +98,55 @@
    * system expects a log start to begin with. Then finds the length of the log
    * which is used to create the log object.
    *
-   * @param {string} row A single line from `svn log`
    * @param {number} index The index in the array that this row is located at.
-   * @param {Array.<string>} logs The original set of logs, used to find the end.
+   * @param {Array.<string>} logsRaw The original set of logs, used to find the end.
+   * @param {Array.<Object>} logs The output array for collected logs.
+   * @return {number} The last line of the log found or the `index` unmodified.
    */
-  function findLogStart(row, index, logs) {
-    if (row.match(/^-{10,100}$/)) {
-      let start = index;
+  function findLogStart(index, logsRaw, logs) {
+    if (logsRaw[index].match(/^-{10,100}$/)) {
+      // Add one since the delimiter isn't part of the SVN log.
+      let start = index + 1;
       let end;
-      index++;
-      while (!end && index < logs.length) {
-        if (logs[index].match(/^-{10,100}$/)) {
-          end = index;
+      // We increment index outside and then at the end instead of just at the beginning
+      // because this allows us to avoid having to special-detect out of bounds.
+      let currentIndex = start;
+      let len = logsRaw.length;
+      while (currentIndex < len) {
+        if (logsRaw[currentIndex].match(/^-{10,100}$/)) {
+          // Subtract one off since the termination line is not part of the message.
+          end = currentIndex - 1;
+          break;
         }
-        index++;
+        currentIndex++;
       }
       if (end) {
-        console.log(`Found log between ${start} and ${end}.`);
-      } else {
-        console.log(`Found end of logs at ${start}.`);
+        packageLog(logs, logsRaw, start, end);
+        return end;
       }
     }
+    // If we don't enter the IF, or make it out,
+    // it's not a match, so keep searching from the same spot.
+    return index;
+  }
+
+  /**
+   * @function packageLog
+   *
+   * @description
+   *
+   * Takes the raw logs and parses them into information that can be used by
+   * the linter to ascribe information such as author, commit number, and message
+   * to a given log and the associated checks.
+   *
+   * @param {Array.<Object>} logs The output array for collected logs.
+   * @param {Array.<string>} logsRaw The original set of logs, used for parsing.
+   * @param {number} start The first line of the log in question.
+   * @param {number} end The last line of the log in question.
+   */
+  function packageLog(logs, logsRaw, start, end) {
+    // Have to use end plus one since slice is [start, end)
+    logs.push(logsRaw.slice(start, end + 1));
   }
 
   var svn = {
