@@ -18,7 +18,7 @@
     try {
       fetchedFiles = execSync(`svn up -r${revision}`).toString().split('\n');
     } catch (err) {
-      console.log(err);
+      console.log(`Unable to fetch revision ${revision}.`);
       return [];
     }
     fetchedFiles.forEach(checkIfFile);
@@ -75,11 +75,48 @@
    * @return {Object.<string>} Object indexed by the revision containing author and comment. (WIP)
    */
   function log(start = 1, stop = 'HEAD') {
+    var logs = [];
     try {
-      return execSync(`svn up -r${start}:${stop}`).toString();
+      logs = execSync(`svn log -r${start}:${stop}`).toString().split('\n');
     } catch (err) {
-      console.log(err);
+      console.log(
+        `Unable to fetch logs for revision ${start} to revision ${stop}`
+      );
       return {};
+    }
+    logs.forEach(findLogStart);
+    return logs;
+  }
+
+  /**
+   * @function findLogStart
+   *
+   * @description
+   *
+   * Checks every line from the log function to see if it matches what the
+   * system expects a log start to begin with. Then finds the length of the log
+   * which is used to create the log object.
+   *
+   * @param {string} row A single line from `svn log`
+   * @param {number} index The index in the array that this row is located at.
+   * @param {Array.<string>} logs The original set of logs, used to find the end.
+   */
+  function findLogStart(row, index, logs) {
+    if (row.match(/^-{10,100}$/)) {
+      let start = index;
+      let end;
+      index++;
+      while (!end && index < logs.length) {
+        if (logs[index].match(/^-{10,100}$/)) {
+          end = index;
+        }
+        index++;
+      }
+      if (end) {
+        console.log(`Found log between ${start} and ${end}.`);
+      } else {
+        console.log(`Found end of logs at ${start}.`);
+      }
     }
   }
 
