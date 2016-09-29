@@ -16,7 +16,11 @@
   function update(revision = 'HEAD') {
     var fetchedFiles;
     try {
-      fetchedFiles = execSync(`svn up -r${revision}`).toString().split('\n');
+      // Not worried about use before define, this function won't be called
+      // eslint-disable-next-line no-use-before-define
+      fetchedFiles = execSync(`svn up -r${revision} ${svn.directory}`)
+        .toString()
+        .split('\n');
     } catch (err) {
       console.log(`Unable to fetch revision ${revision}.`);
       return [];
@@ -76,21 +80,25 @@
    */
   function log(start = 1, stop = 'HEAD') {
     var logsRaw = [];
-    var logs = [];
+    var logs = {};
     try {
-      logsRaw = execSync(`svn log -r${start}:${stop}`).toString().split('\n');
+      // Not worried about use before define, this function won't be called
+      // eslint-disable-next-line no-use-before-define
+      logsRaw = execSync(`svn log -r${start}:${stop} ${svn.directory}`)
+        .toString()
+        .split('\n');
     } catch (err) {
       console.log(`Unable to fetch logs for revisions ${start} to ${stop}.`);
       return {};
     }
     for (let index = 0, len = logsRaw.length; index < len; index++) {
-      index = findLogStart(index, logsRaw, logs);
+      index = findLogs(index, logsRaw, logs);
     }
     return logs;
   }
 
   /**
-   * @function findLogStart
+   * @function findLogs
    *
    * @description
    *
@@ -100,10 +108,10 @@
    *
    * @param {number} index The index in the array that this row is located at.
    * @param {Array.<string>} logsRaw The original set of logs, used to find the end.
-   * @param {Array.<Object>} logs The output array for collected logs.
+   * @param {Object.<string>} logs The output array for collected logs.
    * @return {number} The last line of the log found or the `index` unmodified.
    */
-  function findLogStart(index, logsRaw, logs) {
+  function findLogs(index, logsRaw, logs) {
     if (logsRaw[index].match(/^-{10,100}$/)) {
       // Add one since the delimiter isn't part of the SVN log.
       let start = index + 1;
@@ -139,20 +147,39 @@
    * the linter to ascribe information such as author, commit number, and message
    * to a given log and the associated checks.
    *
-   * @param {Array.<Object>} logs The output array for collected logs.
+   * @param {Object.<string>} logs The output array for collected logs.
    * @param {Array.<string>} logsRaw The original set of logs, used for parsing.
    * @param {number} start The first line of the log in question.
    * @param {number} end The last line of the log in question.
    */
   function packageLog(logs, logsRaw, start, end) {
-    // Have to use end plus one since slice is [start, end)
-    logs.push(logsRaw.slice(start, end + 1));
+    var info = logsRaw[start].split('|');
+    info.forEach((infoEntry, index, info) => {
+      info[index] = infoEntry.trim();
+    });
+    var [revision, author, commitTime, lines] = info;
+    // The commit message starts on the line after the blank line following the info.
+    var commitMessage = logsRaw.slice(start + 2, end + 1).join('\n');
+
+    // Cleanup info for storage
+    // We don't need the leading 'r'.
+    revision = revision.substr(1);
+    var commitTimeEpochMillis = Date.parse(commitTime);
+
+    logs[revision] = {
+      revision,
+      author,
+      commitTime,
+      commitTimeEpochMillis,
+      lines,
+      commitMessage
+    };
   }
 
   var svn = {
     directory: '.',
-    update: update,
-    log: log
+    update,
+    log
   };
 
   module.exports = svn;
