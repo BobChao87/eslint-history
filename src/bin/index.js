@@ -39,13 +39,16 @@ const validArgs = {
 
 var passedArgs = {};
 
+var skipArg = false;
 process.argv.forEach(function processArg(arg, position, argv) {
-  if (position < 2) {
+  if (position < 2 || skipArg) {
+    skipArg = false;
     // The first two are node and the file name. Ignore them.
     return;
   }
   if (arg.startsWith('--')) {
     let args = arg.substr(2).split('=');
+    skipArg = args.length === 1;
     passedArgs[args[0]] = {
       name: args[0],
       position,
@@ -54,6 +57,7 @@ process.argv.forEach(function processArg(arg, position, argv) {
     };
   } else if (arg.startsWith('-')) {
     let args = arg.substr(1).split('=');
+    skipArg = args.length === 1;
     passedArgs[args[0]] = {
       name: args[0],
       position,
