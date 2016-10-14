@@ -1,0 +1,34 @@
+{
+  "directory": {
+    "required": false,
+    "default": ".",
+    "position": 0,
+    "short": "d",
+    "takesArg": true,
+    "requiredArg": true
+  },
+  "start": {
+    "required": false,
+    "default": "NEXT",
+    "position": 1,
+    "short": "s",
+    "takesArg": true,
+    "requiredArg": false
+  },
+  "end": {
+    "required": false,
+    "default": "HEAD",
+    "position": 2,
+    "short": "e",
+    "takesArg": true,
+    "requiredArg": true
+  },
+  "help": {
+    "required": false,
+    "default": null,
+    "position": null,
+    "short": "h",
+    "takesArg": false,
+    "requiredArg": false
+  }
+}
