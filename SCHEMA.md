@@ -22,4 +22,26 @@ ESLint History stores all of its historical records and meta data in a SQLite3 d
 
 ## `Files`
 * `name`: File name.
-*
+* `pathId`: References `Paths`. Location of this file.
+
+## `Types`
+* `name`: The English name of the type. i.e. "Error" or "Warn".
+* `longName`: Unabbreviated version of the `name`.
+* `number`: The shortcut numerical version of the name. i.e. 2 or 1
+
+## `Extensions`
+* `name`: Name of the extension prefix. i.e. For "angular/log" this would be "angular".
+
+## `Rules`
+* `name`: Name of the rule. For extensions, stuff like "angular/log" will have "log" here and an `extensionId`.
+* `typeId`: References `Types`. Describes severity of rule violation.
+* `extensionId`: Optional. References `Extensions`. Says which extension this rule belongs to, if relevant.
+
+## `Violations`
+* `content`: Full contents of the line causing the violation.
+* `line`: Line number this violation was reported on.
+* `position`: Location in the line this violation was reported at.
+* `fileId`: References `Files`. File in which this violation was reported in.
+* `ruleId`: References `Rules`. Rule which was violated.
+* `startCommitId`: References `Commits`. Commit in which this violation first occurred.
+* `endCommitId`: Optional. References `Commits`. Commit in which this violation was removed, if any.
