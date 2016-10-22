@@ -17,6 +17,10 @@ ESLint History stores all of its historical records and meta data in a SQLite3 d
 * `time`: Time the event occurred. Unix timestamp, in milliseconds.
   * This is not a `DATETIME` column, but instead an `INTEGER`, to allow the application to better handle it.
 
+## `Repositories`
+* `name` Name of the respository. Typically the highest possible folder name.
+* `commitId`: References `Commits`. Used to track the current commit number for stuff like "next" commit access.
+
 ## `Paths`
 * `name`: Folder name/path. Unix style seperation.
 
@@ -36,6 +40,7 @@ ESLint History stores all of its historical records and meta data in a SQLite3 d
 * `name`: Name of the rule. For extensions, stuff like "angular/log" will have "log" here and an `extensionId`.
 * `typeId`: References `Types`. Describes severity of rule violation.
 * `extensionId`: Optional. References `Extensions`. Says which extension this rule belongs to, if relevant.
+* `respositoryId`: References `Repositories`. Respository to which this rule belongs.
 
 ## `Violations`
 * `content`: Full contents of the line causing the violation.
