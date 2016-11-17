@@ -10,8 +10,8 @@
    * 6 : Rule name
    */
   // eslint-disable-next-line max-len
-  const lineRegex = /^\s+(\d+):(\d+)\s+([a-z-]+)\s+(.*[^\s])\s+(?:([a-zA-Z-]+)\/)?([a-zA-Z-]+)$/;
-  //                     1  /1 2  /2   3      /3   4      /4      5         /5    6         /6
+  const lineRegex = /^\s+(\d+):(\d+)\s+([a-zA-Z-]+)\s+(.*[^\s])\s+(?:([a-zA-Z-]+)\/)?([a-zA-Z-]+)$/;
+  //                     1  /1 2  /2   3         /3   4      /4      5         /5    6         /6
 
   /**
    * @function parseLine
@@ -28,7 +28,7 @@
    */
   function parseLine(line) {
     var results = lineRegex.exec(line);
-    return {
+    return results && {
       line: results[1],
       column: results[2],
       level: results[3],
@@ -37,6 +37,12 @@
       rule: results[6]
     };
   }
+
+  /**
+   * 1 : filename
+   */
+  const fileRegex = /^([^\s].*[^\s])$/;
+  //                  1           /1
 
   /**
    * @function parseFile
@@ -52,11 +58,41 @@
    * @return {Object} information about the parsed file.
    */
   function parseFile(fileChunk) {
-    return {};
+    var lines = fileChunk.split('\n');
+    var file = {issues: []};
+    for (let line of lines) {
+      if (fileRegex.test(line)) {
+        if (file.file) {
+          // We already found the file name, so this must be an extra entry.
+          break;
+        }
+        file.file = line;
+      } else if (lineRegex.test(line)) {
+        file.issues.push(parseLine(line));
+      }
+    }
+    return file;
   }
 
-  function parse() {
-
+  /**
+   * @function parse
+   *
+   * @description
+   *
+   * Takes in the full output of ESLint and parses it into a more
+   * machine-readable format. This format is also fairly human readable.
+   * Specifically it's an array of entries of output from parseFile.
+   *
+   * @param {string} output Full output of ESLint
+   * @return {Object[]} Several objects containing info about single files.
+   */
+  function parse(output) {
+    var files = output.split('\n\n');
+    var parsedFiles = [];
+    for (let file of files) {
+      parsedFiles.push(parseFile(file));
+    }
+    return parsedFiles;
   }
 
   module.exports = parse;
