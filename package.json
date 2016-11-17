@@ -1,6 +1,6 @@
 {
   "name": "eslint-history",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Historical ESLint info, referring to revisions when errors occured and more.",
   "main": "index.js",
   "scripts": {
