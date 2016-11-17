@@ -87,6 +87,7 @@
    * @return {Object[]} Several objects containing info about single files.
    */
   function parse(output) {
+    // TODO Make sure that we can ignore the summary line at the end.
     var files = output.split('\n\n');
     var parsedFiles = [];
     for (let file of files) {
