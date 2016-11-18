@@ -26,7 +26,7 @@
       },
       comment: {
         [KW.TYPE]: KW.TEXT,
-        [KW.PROPERTIES]: KW.REQUIRED
+        [KW.PROPERTIES]: KW.OPTIONAL
       },
       time: {
         [KW.TYPE]: KW.INT,
@@ -156,7 +156,7 @@
       endCommitId: {
         [KW.TYPE]: KW.INT,
         [KW.PROPERTIES]: {
-          [KW.REQUIRED]: true,
+          [KW.OPTIONAL]: true,
           [KW.FOREIGN]: 'Commits'
         }
       }

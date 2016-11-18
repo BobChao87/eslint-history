@@ -30,7 +30,7 @@ ESLint History stores all of its historical records and meta data in a SQLite3 d
 
 ## `Types`
 * `name`: The English name of the type. i.e. "Error" or "Warn".
-* `longName`: Unabbreviated version of the `name`.
+* `longName`: Unabbreviated version of the `name`. i.e. "Error" or "Warning".
 * `number`: The shortcut numerical version of the name. i.e. 2 or 1
 
 ## `Extensions`
