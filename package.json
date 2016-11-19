@@ -1,6 +1,6 @@
 {
   "name": "eslint-history",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Historical ESLint info, referring to revisions when errors occured and more.",
   "main": "index.js",
   "scripts": {
@@ -21,29 +21,28 @@
   },
   "homepage": "https://github.com/BobChao87/eslint-history#readme",
   "dependencies": {
-    "@angular/common": "^2.1.1",
-    "@angular/compiler": "^2.1.1",
-    "@angular/core": "^2.1.1",
-    "@angular/forms": "^2.1.1",
-    "@angular/http": "^2.1.1",
-    "@angular/platform-browser": "^2.1.1",
-    "@angular/platform-browser-dynamic": "^2.1.1",
-    "@angular/router": "^3.1.1",
-    "@angular/upgrade": "^2.1.1",
+    "@angular/common": "^2.2.1",
+    "@angular/compiler": "^2.2.1",
+    "@angular/core": "^2.2.1",
+    "@angular/forms": "^2.2.1",
+    "@angular/http": "^2.2.1",
+    "@angular/platform-browser": "^2.2.1",
+    "@angular/platform-browser-dynamic": "^2.2.1",
+    "@angular/router": "^3.2.1",
+    "@angular/upgrade": "^2.2.1",
     "angular2-in-memory-web-api": "0.0.20",
     "bootstrap": "^3.3.7",
     "core-js": "^2.4.1",
-    "eslint": "^3.8.1",
     "reflect-metadata": "^0.1.8",
     "rxjs": "5.0.0-beta.12",
-    "sqlite3": "^3.1.6",
-    "systemjs": "^0.19.39",
+    "sqlite3": "^3.1.8",
+    "systemjs": "^0.19.41",
     "zone.js": "^0.6.26"
   },
   "devDependencies": {
-    "concurrently": "^2.2.0",
-    "eslint": "^3.5.0",
-    "eslint-config-google": "^0.6.0",
+    "concurrently": "^3.1.0",
+    "eslint": "^3.10.2",
+    "eslint-config-google": "^0.7.0",
     "lite-server": "^2.2.2"
   }
 }
