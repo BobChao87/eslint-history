@@ -10,6 +10,18 @@ var parsedArgs = require('./parseArgs')(validArgs);
 
 var logs = svn.log(parsedArgs.start, parsedArgs.end);
 
+/**
+ * @function recursiveFetch
+ *
+ * @description
+ *
+ * Helper function for maintaining synchronization between svn and git
+ * for a local project. Also a good tester for the various features of
+ * ESLint History.
+ *
+ * @param {string|number} revision Target revision to fetch
+ * @param {string|number} end Target revsion to stop fetch on
+ */
 function recursiveFetch(revision, end) {
   var files = svn.update(revision);
   console.log(`Fetched revision ${revision}:`);
