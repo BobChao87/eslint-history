@@ -23,6 +23,17 @@
     return parse(eslint);
   }
 
+  /**
+   * @function lineInfo
+   *
+   * @description
+   *
+   * Function responsible for taking the output of ESLint
+   * and associating it with the correct line.
+   *
+   * @param {Object[]} eslint Output of the eslint function
+   * @return {Object[]} Updated input in which each issue gets a line.
+   */
   function lineInfo(eslint) {
     var info = [];
     for (let file of eslint) {
