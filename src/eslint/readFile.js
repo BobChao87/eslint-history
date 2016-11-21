@@ -17,7 +17,8 @@
     try {
       contents = readFileSync(file.file).toString().split('\n');
     } catch (err) {
-      console.log(`Could not read file "${file.file}".`);
+      // We'll need to add averbose flag later.
+      // console.log(`Could not read file "${file.file}".`);
       return file;
     }
     for (let issue of file.issues) {
