@@ -84,7 +84,7 @@
         //   console.log('Requires a position:', argName);
         } else if (arg.default) {
           // console.log('Using default:', argName, arg.default);
-          parsedArgs[argName] = passedArgs[arg.default];
+          parsedArgs[argName] = arg.default;
         } else if (arg.required) {
           console.error(`Cannot proceed without "${argName}".`);
           process.exit(1);
