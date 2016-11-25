@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 
-var svn = require('../svn');
+let svn = require('../svn');
 
-var readline = require('readline');
+let readline = require('readline');
 
 const validArgs = require('./validArgs.json');
 
-var parsedArgs = require('./parseArgs')(validArgs);
+let parsedArgs = require('./parseArgs')(validArgs);
 
-var logs = svn.log(parsedArgs.start, parsedArgs.end);
+let logs = svn.log(parsedArgs.start, parsedArgs.end);
 
 /**
  * @function recursiveFetch
@@ -23,12 +23,12 @@ var logs = svn.log(parsedArgs.start, parsedArgs.end);
  * @param {string|number} end Target revsion to stop fetch on
  */
 function recursiveFetch(revision, end) {
-  var files = svn.update(revision);
+  let files = svn.update(revision);
   console.log(`Fetched revision ${revision}:`);
   for (let file of files) {
     console.log('\t', file);
   }
-  var log = logs[revision];
+  let log = logs[revision];
   console.log(`
 SVN Commit: ${log.revision}
 Author: ${log.author}
@@ -39,7 +39,7 @@ ${log.commitMessage}
   if (revision < end) {
     let rl = readline.createInterface({
       input: process.stdin,
-      output: process.stdout
+      output: process.stdout,
     });
     rl.question('Hit ENTER to fetch next revision ', () => {
       rl.close();

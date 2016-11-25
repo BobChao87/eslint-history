@@ -14,7 +14,7 @@
    * @return {List.<string>} List of changed files (WIP)
    */
   function update(revision = 'HEAD') {
-    var fetchedFiles;
+    let fetchedFiles;
     try {
       // Not worried about use before define, this function won't be called
       // eslint-disable-next-line no-use-before-define
@@ -37,13 +37,14 @@
    * Function to help trim out file names from from the update.
    * Checks for read access in addition to make sure we can use it.
    *
-   * @param {string} fetchedFile A single line of output from the svn update command.
+   * @param {string} fetchedFile A single line of output from the svn update
+   *    command.
    * @param {number} index The index of the string in the output.
    * @param {List.<string>} fetchedFiles The original output from svn update.
    */
   function checkIfFile(fetchedFile, index, fetchedFiles) {
-    var svnPrefixLength = 5;
-    var fileName = fetchedFile.substring(svnPrefixLength);
+    let svnPrefixLength = 5;
+    let fileName = fetchedFile.substring(svnPrefixLength);
     try {
       fs.accessSync(fileName, fs.R_OK);
       fetchedFiles[index] = fileName;
@@ -76,11 +77,12 @@
    *
    * @param {number|string} [start=1] The first record to fetch a log for.
    * @param {number|string} [stop='Head'] The last record to fetch a log for.
-   * @return {Object.<string>} Object indexed by the revision containing author and comment. (WIP)
+   * @return {Object.<string>} Object indexed by the revision containing author
+   *    and comment. (WIP)
    */
   function log(start = 1, stop = 'HEAD') {
-    var logsRaw = [];
-    var logs = {};
+    let logsRaw = [];
+    let logs = {};
     try {
       // Not worried about use before define, this function won't be called
       // eslint-disable-next-line no-use-before-define
@@ -107,7 +109,8 @@
    * which is used to create the log object.
    *
    * @param {number} index The index in the array that this row is located at.
-   * @param {Array.<string>} logsRaw The original set of logs, used to find the end.
+   * @param {Array.<string>} logsRaw The original set of logs, used to find the
+   *    end.
    * @param {Object.<string>} logs The output array for collected logs.
    * @return {number} The last line of the log found or the `index` unmodified.
    */
@@ -116,13 +119,15 @@
       // Add one since the delimiter isn't part of the SVN log.
       let start = index + 1;
       let end;
-      // We increment index outside and then at the end instead of just at the beginning
-      // because this allows us to avoid having to special-detect out of bounds.
+      // We increment index outside and then at the end instead of just at the
+      // beginning because this allows us to avoid having to special-detect out
+      // of bounds.
       let currentIndex = start;
       let len = logsRaw.length;
       while (currentIndex < len) {
         if (logsRaw[currentIndex].match(/^-{10,100}$/)) {
-          // Subtract one off since the termination line is not part of the message.
+          // Subtract one off since the termination line is not part of the
+          // message.
           end = currentIndex - 1;
           break;
         }
@@ -144,8 +149,8 @@
    * @description
    *
    * Takes the raw logs and parses them into information that can be used by
-   * the linter to ascribe information such as author, commit number, and message
-   * to a given log and the associated checks.
+   * the linter to ascribe information such as author, commit number, and
+   * message to a given log and the associated checks.
    *
    * @param {Object.<string>} logs The output array for collected logs.
    * @param {Array.<string>} logsRaw The original set of logs, used for parsing.
@@ -153,18 +158,19 @@
    * @param {number} end The last line of the log in question.
    */
   function packageLog(logs, logsRaw, start, end) {
-    var info = logsRaw[start].split('|');
+    let info = logsRaw[start].split('|');
     info.forEach((infoEntry, index, info) => {
       info[index] = infoEntry.trim();
     });
-    var [revision, author, commitTime, lines] = info;
-    // The commit message starts on the line after the blank line following the info.
-    var commitMessage = logsRaw.slice(start + 2, end + 1).join('\n');
+    let [revision, author, commitTime, lines] = info;
+    // The commit message starts on the line after the blank line following the
+    // info.
+    let commitMessage = logsRaw.slice(start + 2, end + 1).join('\n');
 
     // Cleanup info for storage
     // We don't need the leading 'r'.
     revision = revision.substr(1);
-    var commitTimeEpochMillis = Date.parse(commitTime);
+    let commitTimeEpochMillis = Date.parse(commitTime);
 
     logs[revision] = {
       revision,
@@ -172,14 +178,14 @@
       commitTime,
       commitTimeEpochMillis,
       lines,
-      commitMessage
+      commitMessage,
     };
   }
 
-  var svn = {
+  let svn = {
     directory: '.',
     update,
-    log
+    log,
   };
 
   module.exports = svn;

@@ -1,15 +1,15 @@
 #!/usr/bin/env node
 
-var path = require('path');
+let path = require('path');
 
-var svn = require('../svn');
-var eslint = require('../eslint');
+let svn = require('../svn');
+let eslint = require('../eslint');
 
-var db = require('../db');
+let db = require('../db');
 const schema = require('../db/schema');
 
 const validArgs = require('./validArgs.json');
-var parsedArgs = require('./parseArgs')(validArgs);
+let parsedArgs = require('./parseArgs')(validArgs);
 
 /**
  * @function main
@@ -23,11 +23,11 @@ var parsedArgs = require('./parseArgs')(validArgs);
 function main(args) {
   svn.directory = args.directory;
 
-  var start = Number(args.start);
-  var end = Number(args.end);
+  let start = Number(args.start);
+  let end = Number(args.end);
 
   // It always excludes the trailing slash
-  var basePathLength = path.resolve(svn.directory).length + 1;
+  let basePathLength = path.resolve(svn.directory).length + 1;
 
   for (let revision = start; revision <= end; revision++) {
     svn.update(revision);

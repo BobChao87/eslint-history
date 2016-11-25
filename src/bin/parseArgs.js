@@ -14,16 +14,16 @@
    *        valuePosition: Place the value was found.
    */
   function passedArgs() {
-    var passedArgs = {};
+    let passedArgs = {};
 
-    var skipArg = false;
+    let skipArg = false;
     process.argv.forEach(function processArg(arg, position, argv) {
       if (position < 2 || skipArg) {
         skipArg = false;
         // The first two are node and the file name. Ignore them.
         return;
       }
-      var passedArg;
+      let passedArg;
       if (arg.startsWith('--')) {
         let args = arg.substr(2).split('=');
         skipArg = args.length === 1;
@@ -31,7 +31,7 @@
           name: args[0],
           position,
           value: args[1] || argv[position + 1],
-          valuePosition: position + (args.length > 1 ? 0 : 1)
+          valuePosition: position + (args.length > 1 ? 0 : 1),
         };
       } else if (arg.startsWith('-')) {
         let args = arg.substr(1).split('=');
@@ -40,14 +40,14 @@
           name: args[0],
           position,
           value: args[1] || argv[position + 1],
-          valuePosition: position + (args.length > 1 ? 0 : 1)
+          valuePosition: position + (args.length > 1 ? 0 : 1),
         };
       } else {
         passedArg = {
           name: null,
           position,
           value: arg,
-          valuePosition: position
+          valuePosition: position,
         };
       }
       passedArgs[passedArg.name || passedArg.position] = passedArg;
@@ -69,7 +69,7 @@
    * @return {Object} Key-value pairs of the passed arguments.
    */
   function parsedArgs(validArgs, passedArgs) {
-    var parsedArgs = {};
+    let parsedArgs = {};
     for (let argName in validArgs) {
       if (validArgs.hasOwnProperty(argName)) {
         let arg = validArgs[argName];
@@ -109,8 +109,10 @@
    * @param {Object} validArgs Keys are valid passable argument names.
    * @param {Object} validArgs.key Any valid key for the function.
    * @param {boolean} validArgs.key.required If this is a required argument.
-   * @param {*} validArgs.key.default Any value that should be assigned if not found.
-   * @param {string} validArgs.key.short A short (-<value>) version of the argument.
+   * @param {*} validArgs.key.default Any value that should be assigned if not
+   *    found.
+   * @param {string} validArgs.key.short A short (-<value>) version of the
+   *    argument.
    * @param {boolean} validArgs.key.takesArg If this takes an argument.
    *    If false, presence of this arg will be returned with `true`.
    *    Explicit arguments (i.e. --key=false) are not allowed.
@@ -118,7 +120,7 @@
    * @return {Object} Key-value pairs of the passed arguments.
    */
   function parseArgs(validArgs) {
-    var passed = passedArgs();
+    let passed = passedArgs();
     return parsedArgs(validArgs, passed);
   }
 

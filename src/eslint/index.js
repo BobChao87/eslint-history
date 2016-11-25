@@ -1,7 +1,7 @@
 (function() {
-  var execSync = require('child_process').execSync;
-  var parse = require('./parse');
-  var readFile = require('./readFile');
+  let execSync = require('child_process').execSync;
+  let parse = require('./parse');
+  let readFile = require('./readFile');
 
   /**
    * @function eslint
@@ -18,7 +18,7 @@
     // (and warnings?). So we call `exit 0` here to prevent that.
     // TODO We should run the local ESLint when possible and then
     // fallback to a system ESLint when it's not available.
-    var eslint = execSync('eslint . ; exit 0')
+    let eslint = execSync('eslint . ; exit 0')
       .toString();
     return parse(eslint);
   }
@@ -35,16 +35,16 @@
    * @return {Object[]} Updated input in which each issue gets a line.
    */
   function lineInfo(eslint) {
-    var info = [];
+    let info = [];
     for (let file of eslint) {
       info.push(readFile(file));
     }
     return info;
   }
 
-  var commands = {
+  let commands = {
     eslint,
-    lineInfo
+    lineInfo,
   };
 
   module.exports = commands;

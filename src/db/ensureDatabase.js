@@ -2,12 +2,12 @@
   const schema = require('./schema');
   const KW = require('./keywords');
 
-  var sqlite3 = require('sqlite3');
-  var db = new sqlite3.Database('eslint_history');
+  let sqlite3 = require('sqlite3');
+  let db = new sqlite3.Database('eslint_history');
 
   function makeColumn(column, data) {
-    var columnString = [column];
-    var dataKeys = Object.keys(data);
+    let columnString = [column];
+    let dataKeys = Object.keys(data);
 
     if (dataKeys.indexOf(KW.TYPE) > -1) {
       columnString.push(data[KW.TYPE]);
@@ -25,7 +25,7 @@
   }
 
   function makeColumns(columns) {
-    var columnStrings = [];
+    let columnStrings = [];
     for (let column in columns) {
       if (columns.hasOwnProperty(column)) {
         columnStrings.push(makeColumn(column, columns[column]));

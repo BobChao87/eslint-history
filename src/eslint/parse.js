@@ -9,9 +9,10 @@
    * 5 : (optional) Rule set
    * 6 : Rule name
    */
-  // eslint-disable-next-line max-len
+  /* eslint-disable max-len */
   const lineRegex = /^\s+(\d+):(\d+)\s+([a-zA-Z-]+)\s+(.*[^\s])\s+(?:([a-zA-Z-]+)\/)?([a-zA-Z-]+)$/;
   //                     1  /1 2  /2   3         /3   4      /4      5         /5    6         /6
+  /* eslint-enable max-len */
 
   /**
    * @function parseLine
@@ -27,14 +28,14 @@
    * @return {Object} information about the parsed line.
    */
   function parseLine(line) {
-    var results = lineRegex.exec(line);
+    let results = lineRegex.exec(line);
     return results && {
       line: results[1],
       column: results[2],
       level: results[3],
       text: results[4],
       extension: results[5],
-      rule: results[6]
+      rule: results[6],
     };
   }
 
@@ -58,8 +59,8 @@
    * @return {Object} information about the parsed file.
    */
   function parseFile(fileChunk) {
-    var lines = fileChunk.split('\n');
-    var file = {issues: []};
+    let lines = fileChunk.split('\n');
+    let file = {issues: []};
     for (let line of lines) {
       if (fileRegex.test(line)) {
         if (file.file) {
@@ -88,8 +89,8 @@
    */
   function parse(output) {
     // TODO Make sure that we can ignore the summary line at the end.
-    var files = output.split('\n\n');
-    var parsedFiles = [];
+    let files = output.split('\n\n');
+    let parsedFiles = [];
     for (let file of files) {
       parsedFiles.push(parseFile(file));
     }

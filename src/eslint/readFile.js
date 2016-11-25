@@ -13,7 +13,7 @@
    * @return {Object} Updated input where each issues has a `code` entry.
    */
   function readFile(file) {
-    var contents;
+    let contents;
     try {
       contents = readFileSync(file.file).toString().split('\n');
     } catch (err) {
