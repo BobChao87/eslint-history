@@ -10,6 +10,8 @@ let parsedArgs = require('./parseArgs')(validArgs);
 
 let logs = svn.log(parsedArgs.start, parsedArgs.end);
 
+let execSync = require('child_process').execSync;
+
 /**
  * @function recursiveFetch
  *
@@ -24,18 +26,28 @@ let logs = svn.log(parsedArgs.start, parsedArgs.end);
  */
 function recursiveFetch(revision, end) {
   let files = svn.update(revision);
-  console.log(`Fetched revision ${revision}:`);
+  console.log(`\nFetched revision ${revision}:`);
   for (let file of files) {
     console.log('\t', file);
   }
   let log = logs[revision];
-  console.log(`
-SVN Commit: ${log.revision}
+  let message = 
+`SVN Commit: ${log.revision}
 Author: ${log.author}
 
-${log.commitMessage}
-`
-  );
+${log.commitMessage}`;
+  console.log(`\n${message}\n`);
+
+  try {
+    let out = execSync(`cd trunk && git add . && git commit -am "${message}"`);
+    console.log(out.toString());
+  } catch (err) {
+    console.error(
+`Had an error committing revision ${revision}.
+Check output for details.\n`
+    );
+  }
+
   if (revision < end) {
     let rl = readline.createInterface({
       input: process.stdin,
