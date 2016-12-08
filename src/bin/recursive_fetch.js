@@ -4,9 +4,9 @@ let svn = require('../svn');
 
 let readline = require('readline');
 
-const validArgs = require('./validArgs.json');
+const validArgs = require('./valid_args.json');
 
-let parsedArgs = require('./parseArgs')(validArgs);
+let parsedArgs = require('./parse_args')(validArgs);
 
 let logs = svn.log(parsedArgs.start, parsedArgs.end);
 
@@ -39,7 +39,7 @@ ${log.commitMessage}`;
   console.log(`\n${message}\n`);
 
   try {
-    let out = execSync(`cd trunk && git add . && git commit -am "${message}"`);
+    let out = execSync(`cd trunk && git add --all . && git commit -am "${message}"`);
     console.log(out.toString());
   } catch (err) {
     console.error(
