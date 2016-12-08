@@ -1,6 +1,6 @@
 let execSync = require('child_process').execSync;
 let parse = require('./parse');
-let readFile = require('./readFile');
+let readFile = require('./read_file');
 
 /**
  * @function eslint

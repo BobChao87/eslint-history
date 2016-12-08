@@ -8,8 +8,8 @@ let eslint = require('../eslint');
 let db = require('../db');
 const schema = require('../db/schema');
 
-const validArgs = require('./validArgs.json');
-let parsedArgs = require('./parseArgs')(validArgs);
+const validArgs = require('./valid_args.json');
+let parsedArgs = require('./parse_args')(validArgs);
 
 /**
  * @function main
