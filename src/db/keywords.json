@@ -3,6 +3,7 @@
   "FOREIGN": "REFERENCES {} (id)",
   "REQUIRED": "NOT NULL",
   "OPTIONAL": "DEFAULT NULL",
+  "DEFAULT": "DEFAULT {}",
 
   "TEXT": "TEXT",
   "INT": "INTEGER",

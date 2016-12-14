@@ -1,4 +1,3 @@
-const schema = require('./schema');
 const KW = require('./keywords');
 
 let sqlite3 = require('sqlite3');
@@ -44,13 +43,11 @@ function makeTable(table, columns) {
   );
 }
 
-function makeDatabase() {
+function makeDatabase(schema) {
   for (let tableName of Object.keys(schema)) {
     let columns = schema[tableName];
     makeTable(tableName, columns);
   }
 }
-
-makeDatabase();
 
 module.exports = makeDatabase;
