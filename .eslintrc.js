@@ -52,7 +52,11 @@ module.exports = {
 //     "class-methods-use-this": [],
 //     "complexity": [],
 //     "consistent-return": [],
-//     "curly": [],
+    "curly": [ // [2]
+      "error",
+      "multi-line",
+      "consistent",
+    ],
 //     "default-case": [],
 //     "dot-location": [],
 //     "dot-notation": [],
@@ -150,7 +154,12 @@ module.exports = {
   // Stylistic Issues
 //     "array-bracket-spacing": [],
 //     "block-spacing": [],
-//     "brace-style": [],
+    "brace-style": [
+      "1tbs",
+      {
+        "allowSingleLine": false,
+      }
+    ],
 //     "camelcase": [],
 //     "capitalized-comments": [],
 //     "comma-dangle": [],
@@ -230,7 +239,10 @@ module.exports = {
 //     "no-underscore-dangle": [],
 //     "no-unneeded-ternary": [],
 //     "no-whitespace-before-property": [],
-//     "object-curly-newline": [],
+    "object-curly-newline": [
+      "error",
+      "multiline",
+    ],
 //     "object-curly-spacing": [],
 //     "object-property-newline": [],
 //     "one-var-declaration-per-line": [],
@@ -295,3 +307,5 @@ module.exports = {
 
 // [1]: Google officially doesn't support import/exports.
 //      Consequently, having an import in error is /definitely/ an error.
+// [2]: Google also enforces that no-curlies must be mono-line, must improve
+//      clarity. For IF blocks, they must not contain an ELSE.
