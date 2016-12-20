@@ -18,15 +18,15 @@ const REQUIRED_PROPERTIES = [
  *
  * Tests an object for suitability for being an insert.
  *
- * @param {Object} data Describes a potential insert.
+ * @param {Object} datum Describes a potential insert.
  * @return {Boolean} If the object is valid to perform an insert.
  */
-function validateInsertObject(data) {
+function validateInsertObject(datum) {
   try {
     /** @type {String[]} */
-    let properties = Object.keys(data);
+    let properties = Object.keys(datum);
   } catch (ex) {
-    console.error(`Inserts cannot be ${data}.`);
+    console.error(`Inserts cannot be ${datum}.`);
     return false;
   }
 
@@ -49,6 +49,30 @@ function validateInsertObject(data) {
 }
 
 /**
+ * @function insertDatum
+ *
+ * @description
+ *
+ * Performs a singular insert statement against the database.
+ *
+ * @param {Object} datum Describes the insert
+ * @param {Object} [schema=null] Schema to validate against
+ * @return {Object} Describes what happened with the insert.
+ */
+function insertDatum(datum, schema=null) {
+  // Double verify the datum, in case we ever expose this in other ways
+  if (!validateInsertObject(datum)) {
+    return {
+      status: false,
+      message: 'Invalid insert data.',
+      originalData: datum
+    };
+  }
+
+
+}
+
+/**
  * @function index
  *
  * @description
@@ -56,11 +80,28 @@ function validateInsertObject(data) {
  * Creates an insert statement and runs it against the database.
  *
  * @param {Object|Object[]} data Describes the insert(s)
+ * @param {Object} [schema=null] Schema to validate against
+ * @return {Object[]} Describes what happened with the inserts.
  */
-function insert(data) {
+function insert(data, schema=null) {
   if (!Array.isArray(data)) {
-
+    data = [data];
   }
+
+  let inserts = [];
+  for (let datum of data) {
+    if (!validateInsertObject(datum)) {
+      inserts.push({
+        status: false,
+        message: 'Invalid insert data.',
+        originalData: datum
+      });
+    } else {
+      inserts.push(insertDatum(datum, schema));
+    }
+  }
+
+  return inserts;
 }
 
 module.exports = insert;
