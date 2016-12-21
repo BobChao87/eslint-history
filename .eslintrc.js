@@ -155,6 +155,7 @@ module.exports = {
 //     "array-bracket-spacing": [],
 //     "block-spacing": [],
     "brace-style": [
+      "error",
       "1tbs",
       {
         "allowSingleLine": false,
