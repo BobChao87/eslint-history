@@ -19,9 +19,10 @@ const REQUIRED_PROPERTIES = [
  * Tests an object for suitability for being an insert.
  *
  * @param {Object} datum Describes a potential insert.
+ * @param {Object} [schema=null] Schema to validate against
  * @return {Boolean} If the object is valid to perform an insert.
  */
-function validateInsertObject(datum) {
+function validateInsertObject(datum, schema=null) {
   try {
     /** @type {String[]} */
     let properties = Object.keys(datum);
@@ -61,7 +62,7 @@ function validateInsertObject(datum) {
  */
 function insertDatum(datum, schema=null) {
   // Double verify the datum, in case we ever expose this in other ways
-  if (!validateInsertObject(datum)) {
+  if (!validateInsertObject(datum, schema)) {
     return {
       status: false,
       message: 'Invalid insert data.',
@@ -69,7 +70,16 @@ function insertDatum(datum, schema=null) {
     };
   }
 
+  let insert = `INSERT INTO ${datum.table} (`;
+  let values = `) VALUES (`;
+  for (column of schema.columns) {
+    if (schema.columns.hasOwnProperty(column)) {
+      insert += `${column},`;
+      values += `${schema.columns[column]}, `;
+    }
+  }
 
+  return {};
 }
 
 /**
@@ -90,7 +100,7 @@ function insert(data, schema=null) {
 
   let inserts = [];
   for (let datum of data) {
-    if (!validateInsertObject(datum)) {
+    if (!validateInsertObject(datum, schema)) {
       inserts.push({
         status: false,
         message: 'Invalid insert data.',
