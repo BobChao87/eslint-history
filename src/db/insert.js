@@ -70,14 +70,27 @@ function insertDatum(datum, schema=null) {
     };
   }
 
-  let insert = `INSERT INTO ${datum.table} (`;
-  let values = `) VALUES (`;
+  let columns = [];
+  let values = [];
   for (column of schema.columns) {
     if (schema.columns.hasOwnProperty(column)) {
-      insert += `${column},`;
-      values += `${schema.columns[column]}, `;
+      insert.push(column);
+      values.push(schema.columns[column]);
     }
   }
+
+  db.run(`
+    INSERT INTO
+      ${datum.table}
+        (
+          ${columns.join(',')}
+        )
+    VALUES
+      (
+        ${value.join(',')}
+      )
+    `
+  );
 
   return {};
 }

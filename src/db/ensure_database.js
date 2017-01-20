@@ -33,8 +33,8 @@ function makeColumns(columns) {
 }
 
 function makeTable(table, columns) {
-  db.run(
-    `CREATE TABLE IF NOT EXISTS
+  db.run(`
+    CREATE TABLE IF NOT EXISTS
       ${table}
       (
         ${makeColumns(columns)}
