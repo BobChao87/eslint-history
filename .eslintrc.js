@@ -245,11 +245,11 @@ module.exports = {
       {
         "ObjectExpression": {
           "multiline": true,
-          // "minProperties": ?,
+          "minProperties": 1,
         },
         // "ObjectPattern": {
         //   "multiline": true,
-        //   "minProperties": ?,
+        //   "minProperties": 1,
         // },
       },
     ],

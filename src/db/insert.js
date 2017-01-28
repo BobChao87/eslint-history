@@ -1,7 +1,10 @@
-/**
+/*
  * This file is responsible for generalizing
  * database insertion and integrity checking.
  */
+
+let sqlite3 = require('sqlite3');
+let db = new sqlite3.Database('eslint_history');
 
 /**
  * Propeties required by an insert.
@@ -23,9 +26,10 @@ const REQUIRED_PROPERTIES = [
  * @return {Boolean} If the object is valid to perform an insert.
  */
 function validateInsertObject(datum, schema=null) {
+  let properties;
   try {
     /** @type {String[]} */
-    let properties = Object.keys(datum);
+    properties = Object.keys(datum);
   } catch (ex) {
     console.error(`Inserts cannot be ${datum}.`);
     return false;
@@ -50,7 +54,7 @@ function validateInsertObject(datum, schema=null) {
 }
 
 /**
- * @function insertDatum
+ * @function insertOne
  *
  * @description
  *
@@ -58,24 +62,27 @@ function validateInsertObject(datum, schema=null) {
  *
  * @param {Object} datum Describes the insert
  * @param {Object} [schema=null] Schema to validate against
- * @return {Object} Describes what happened with the insert.
+ * @return {Promise.<Object>} Describes what happened with the insert.
  */
-function insertDatum(datum, schema=null) {
+function insertOne(datum, schema=null) {
   // Double verify the datum, in case we ever expose this in other ways
   if (!validateInsertObject(datum, schema)) {
-    return {
+    return Promise.resolve({
       status: false,
       message: 'Invalid insert data.',
       originalData: datum
-    };
+    });
   }
 
   let columns = [];
   let values = [];
-  for (column of schema.columns) {
-    if (schema.columns.hasOwnProperty(column)) {
-      insert.push(column);
-      values.push(schema.columns[column]);
+  for (let column in datum.columns) {
+    if (datum.columns.hasOwnProperty(column)) {
+      columns.push(column);
+      values.push(typeof datum.columns[column] === 'string' ?
+        `"${datum.columns[column]}"` :
+        datum.columns[column]
+      );
     }
   }
 
@@ -87,9 +94,12 @@ function insertDatum(datum, schema=null) {
         )
     VALUES
       (
-        ${value.join(',')}
+        ${values.join(',')}
       )
-    `
+    `,
+    function() {
+      console.log(arguments);
+    }
   );
 
   return {};
@@ -120,7 +130,7 @@ function insert(data, schema=null) {
         originalData: datum
       });
     } else {
-      inserts.push(insertDatum(datum, schema));
+      inserts.push(insertOne(datum, schema));
     }
   }
 
