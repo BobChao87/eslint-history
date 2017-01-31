@@ -65,7 +65,6 @@ function validateInsertObject(datum, schema=null) {
  * @return {Promise.<Object>} Describes what happened with the insert.
  */
 function insertOne(datum, schema=null) {
-  // Double verify the datum, in case we ever expose this in other ways
   if (!validateInsertObject(datum, schema)) {
     return Promise.resolve({
       status: false,
@@ -86,23 +85,34 @@ function insertOne(datum, schema=null) {
     }
   }
 
-  db.run(`
-    INSERT INTO
-      ${datum.table}
+  return new Promise((resolve, reject) => {
+    db.run(`
+      INSERT INTO
+        ${datum.table}
+          (
+            ${columns.join(',')}
+          )
+      VALUES
         (
-          ${columns.join(',')}
+          ${values.join(',')}
         )
-    VALUES
-      (
-        ${values.join(',')}
-      )
-    `,
-    function() {
-      console.log(arguments);
-    }
+      `,
+      function(err) {
+        if (err) {
+          return resolve({
+            status: false,
+            message: err,
+            originalData: datum
+          });
+        }
+        return resolve({
+          status: true,
+          message: 'Success',
+          originalData: datum
+        });
+      }
   );
-
-  return {};
+  });
 }
 
 /**
@@ -112,29 +122,22 @@ function insertOne(datum, schema=null) {
  *
  * Creates an insert statement and runs it against the database.
  *
- * @param {Object|Object[]} data Describes the insert(s)
+ * @param {(Object|Object[])} data Describes the insert(s)
  * @param {Object} [schema=null] Schema to validate against
- * @return {Object[]} Describes what happened with the inserts.
+ * @return {(Promise.<Object>|Promise.<Object[]>)} Describes what happened with
+ *    the inserts.
  */
 function insert(data, schema=null) {
   if (!Array.isArray(data)) {
-    data = [data];
+    return insertOne(data);
   }
 
   let inserts = [];
   for (let datum of data) {
-    if (!validateInsertObject(datum, schema)) {
-      inserts.push({
-        status: false,
-        message: 'Invalid insert data.',
-        originalData: datum
-      });
-    } else {
-      inserts.push(insertOne(datum, schema));
-    }
+    inserts.push(insertOne(datum, schema));
   }
 
-  return inserts;
+  return Promise.all(inserts);
 }
 
 module.exports = insert;

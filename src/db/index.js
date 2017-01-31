@@ -1,3 +1,6 @@
 const schema = require('./schema');
 
-let ensureDatabase = require('./ensure_database');
+module.exports = {
+  insert: require('./insert'),
+  ensureDatabase: require('./ensure_database')
+};
