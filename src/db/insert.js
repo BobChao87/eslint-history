@@ -85,30 +85,34 @@ function insertOne(datum, schema=null) {
     }
   }
 
-  return new Promise((resolve, reject) => {
-    db.run(`
-      INSERT INTO
-        ${datum.table}
-          (
-            ${columns.join(',')}
-          )
-      VALUES
+  let statement = `
+    INSERT INTO
+      ${datum.table}
         (
-          ${values.join(',')}
+          ${columns.join(',')}
         )
-      `,
+    VALUES
+      (
+        ${values.join(',')}
+      )
+  `;
+
+  return new Promise((resolve, reject) => {
+    db.run(statement,
       function(err) {
         if (err) {
           return resolve({
             status: false,
             message: err,
-            originalData: datum
+            originalData: datum,
+            statement
           });
         }
         return resolve({
           status: true,
           message: 'Success',
-          originalData: datum
+          originalData: datum,
+          statement
         });
       }
   );

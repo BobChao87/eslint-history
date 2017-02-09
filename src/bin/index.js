@@ -6,10 +6,10 @@ let svn = require('../svn');
 let eslint = require('../eslint');
 
 let db = require('../db');
-const schema = require('../db/schema');
 
 const validArgs = require('./valid_args.json');
 let parsedArgs = require('./parse_args')(validArgs);
+let saveEntry = require('./save_entry');
 
 /**
  * @function main
@@ -38,46 +38,10 @@ function main(args) {
       if (!file.issues.length) {
         continue;
       }
-      let filename = `${file.file.substring(basePathLength)}`; 
+      let filename = `${file.file.substring(basePathLength)}`;
       console.log(filename);
       for (let issue of file.issues) {
-        let data = {Violations: {}};
-        data.Violations.line = issue.line;
-        data.Violations.position = issue.column;
-        data.Violations.content = issue.code;
-        data.Violations.startCommit = {
-          version: revision,
-          user: null,
-          comment: null,
-          time: null
-        };
-        data.Violations.endCommit = {
-          version: revision,
-          user: null,
-          comment: null,
-          time: null
-        };
-        data.Violations.file = {
-          name: filename.split('/').slice(-1)[0],
-          path: {
-            name: filename.split('/').slice(0, -1).join('/')
-          }
-        };
-        data.Violations.rule = {
-          name: issue.rule,
-          type: {
-            name: null,
-            longName: issue.level,
-            number: null
-          }
-        };
-        if (issue.extension) {
-          data.Violations.rule.extension = {
-            name: issue.extension
-          };
-        }
-        console.log(JSON.stringify(issue));
-        console.log(JSON.stringify(data, null, '  '));
+        saveEntry(issue, filename, revision);
       }
     }
   }

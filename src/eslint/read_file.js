@@ -5,7 +5,7 @@ const readFileSync = require('fs').readFileSync;
  *
  * @description
  *
- * Takes a file objhect and opens and parses the file to extract information
+ * Takes a file object and opens and parses the file to extract information
  * about the issues that are associated with this file.
  *
  * @param {Object} file Singular file instances from `parse`.
@@ -16,7 +16,7 @@ function readFile(file) {
   try {
     contents = readFileSync(file.file).toString().split('\n');
   } catch (err) {
-    // We'll need to add averbose flag later.
+    // We'll need to add a verbose flag later.
     // console.log(`Could not read file "${file.file}".`);
     return file;
   }
