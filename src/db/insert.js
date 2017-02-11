@@ -120,7 +120,7 @@ function insertOne(datum, schema=null) {
 }
 
 /**
- * @function index
+ * @function insert
  *
  * @description
  *
