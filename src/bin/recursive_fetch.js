@@ -31,7 +31,7 @@ function recursiveFetch(revision, end) {
     console.log('\t', file);
   }
   let log = logs[revision];
-  let message = 
+  let message =
 `SVN Commit: ${log.revision}
 Author: ${log.author}
 
@@ -39,7 +39,7 @@ ${log.commitMessage}`;
   console.log(`\n${message}\n`);
 
   try {
-    let out = execSync(`cd trunk && git add --all . && git commit -am "${message}"`);
+    let out = execSync(`cd . && git add --all . && git commit -am "${message}"`);
     console.log(out.toString());
   } catch (err) {
     console.error(

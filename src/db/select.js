@@ -13,9 +13,9 @@ let db = new sqlite3.Database('eslint_history');
  * Performs a singular select statement against the database.
  *
  * @param {Object} datum Describes the select
- * @return {Promise.<Object>} Describes what happened with the select.
+ * @return {Promise.<Object>} The value fetched or an error.
  */
-function insertOne(datum) {
+function selectOne(datum) {
   let where = [];
   for (let column in datum.columns) {
     if (datum.columns.hasOwnProperty(column)) {
@@ -32,16 +32,15 @@ function insertOne(datum) {
     }
   }
 
-  let statement = `
-    SELECT * FROM
-      ${datum.table}
-    WHERE
-      ${where.join(' AND ')}
-  `;
+  let statement = `SELECT * FROM ${datum.table}`;
+  if (where.length) {
+    statement += ` WHERE ${where.join(' AND ')}`;
+  }
+  statement += ';';
 
   return new Promise((resolve, reject) => {
-    db.run(statement,
-      function(err) {
+    db.all(statement,
+      function(err, records) {
         if (err) {
           return resolve({
             status: false,
@@ -54,10 +53,11 @@ function insertOne(datum) {
           status: true,
           message: 'Success',
           originalData: datum,
-          statement
+          statement,
+          data: records
         });
       }
-  );
+    );
   });
 }
 
@@ -69,12 +69,11 @@ function insertOne(datum) {
  * Creates an select statement and runs it against the database.
  *
  * @param {(Object|Object[])} data Describes the select(s)
- * @return {(Promise.<Object>|Promise.<Object[]>)} Describes what happened with
- *    the selects.
+ * @return {(Promise.<Object>|Promise.<Object[]>)} The value fetched or errors.
  */
 function select(data) {
   if (!Array.isArray(data)) {
-    return selectOne(selectOne);
+    return selectOne(data);
   }
 
   let selects = [];

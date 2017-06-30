@@ -3,8 +3,7 @@ let db = require('../db');
 function saveEntry(issue, fullPath, commit) {
   let insertData = parseIssue(issue, fullPath, commit);
   let insert = buildSingleInsert(insertData);
-  let inserts = db.insert(insert);
-  inserts.then(_=>console.log(_));
+  // let inserts = db.insert(insert);
   return inserts;
 }
 

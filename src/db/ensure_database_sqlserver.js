@@ -1,4 +1,4 @@
-const KW = require('./keywords');
+const KW = require('./keywords_sqlserver');
 
 let sqlite3 = require('sqlite3');
 let db = new sqlite3.Database('eslint_history');
@@ -29,17 +29,17 @@ function makeColumns(columns) {
       columnStrings.push(makeColumn(column, columns[column]));
     }
   }
-  return columnStrings.join(',\n      ');
+  return columnStrings.join(',\n    ');
 }
 
 function makeTable(table, columns) {
-  db.run(`
-    CREATE TABLE IF NOT EXISTS
-      ${table}
-      (
-        ${makeColumns(columns)}
-      )
-  `);
+  console.log(
+`CREATE TABLE
+  ${table}
+  (
+    ${makeColumns(columns)}
+  )
+`);
 }
 
 function makeDatabase(schema) {
