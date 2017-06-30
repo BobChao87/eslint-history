@@ -1,5 +1,6 @@
 const execSync = require('child_process').execSync;
 const fs = require('fs');
+const os = require('os');
 
 /**
  * @function update
@@ -87,7 +88,7 @@ function log(start = 1, stop = 'HEAD') {
     // eslint-disable-next-line no-use-before-define
     logsRaw = execSync(`svn log -r${start}:${stop} ${svn.directory}`)
       .toString()
-      .split('\n');
+      .split(os.EOL);
   } catch (err) {
     console.log(`Unable to fetch logs for revisions ${start} to ${stop}.`);
     return {};
